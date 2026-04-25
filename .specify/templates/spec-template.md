@@ -88,12 +88,12 @@
 - **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-005**: System MUST [demo-safe behavior, e.g., "display only synthetic mission data"]
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-006**: System MUST use a simulated demo persona via [NEEDS CLARIFICATION: persona options not specified]
+- **FR-007**: System MUST seed [NEEDS CLARIFICATION: required demo divisions or mission examples not specified]
 
 ### Key Entities *(include if feature involves data)*
 
@@ -122,7 +122,7 @@
   chosen when the feature description did not specify certain details.
 -->
 
-- [Assumption about target users, e.g., "Users have stable internet connectivity"]
-- [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
-- [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
-- [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+- [Assumption about target users, e.g., "Demo users run the portal locally in a development environment"]
+- [Assumption about scope boundaries, e.g., "Real auth, RBAC, notifications, attachments, and multi-tenant behavior are out of scope"]
+- [Assumption about data/environment, e.g., "All mission, division, and persona data is synthetic"]
+- [Dependency boundary, e.g., "No external service or tenant connection is required for the MVP"]

@@ -17,21 +17,28 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: C# / .NET [version or NEEDS CLARIFICATION]  
+**Primary Dependencies**: Blazor, EF Core, SQLite, Tailwind CSS, reusable Razor components  
+**Storage**: Local SQLite database with synthetic demo seed data  
+**Testing**: `dotnet test` with targeted unit/integration coverage as applicable  
+**Target Platform**: Local developer machine, VS Code + WSL friendly
+**Project Type**: Blazor web application, local-first demo app  
+**Performance Goals**: Responsive local demo flows; no enterprise scale target  
+**Constraints**: Demo-safe, no secrets, no real tenant integration, no required external services  
+**Scale/Scope**: MVP screens for dashboard, missions, mission details, creation, and divisions
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+The plan MUST pass these gates before Phase 0 research and again after Phase 1 design:
+
+- MVP demo path covers centralizing, prioritizing, and tracking inter-division missions.
+- Implementation remains local-first with SQLite and synthetic seed data.
+- No real auth, RBAC, tenant integration, external API, real notifications, or cloud dependency is introduced.
+- Structure keeps Domain, Data, Services, Components, Pages, Styles, Assets, and Tests clearly separated.
+- Validation and tests are targeted to the current MVP behavior.
+- README impact is identified for any build, run, test, structure, or demo-safe change.
 
 ## Project Structure
 
@@ -56,39 +63,19 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+└── AnimaxMissionControlPortal/
+    ├── Domain/
+    ├── Data/
+    ├── Services/
+    ├── Components/
+    ├── Components/Pages/
+    ├── Styles/
+    ├── Assets/
+    └── wwwroot/
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+└── AnimaxMissionControlPortal.Tests/
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

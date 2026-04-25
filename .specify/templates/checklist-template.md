@@ -20,17 +20,17 @@
   ============================================================================
 -->
 
-## [Category 1]
+## MVP Demo Path
 
-- [ ] CHK001 First checklist item with clear action
-- [ ] CHK002 Second checklist item
-- [ ] CHK003 Third checklist item
+- [ ] CHK001 Core mission workflow can be demonstrated locally end to end
+- [ ] CHK002 Dashboard, mission list, mission detail, create mission, and division views are covered when relevant
+- [ ] CHK003 Demo persona behavior is visual/contextual only and does not imply real authorization
 
-## [Category 2]
+## Demo-Safe Local Operation
 
-- [ ] CHK004 Another category item
-- [ ] CHK005 Item with specific criteria
-- [ ] CHK006 Final item in this category
+- [ ] CHK004 Data is synthetic and seed data is sufficient for the workflow
+- [ ] CHK005 No secrets, real tenant integration, external API, real notifications, or cloud dependency are required
+- [ ] CHK006 README commands and demo-safe notes remain accurate
 
 ## Notes
 
