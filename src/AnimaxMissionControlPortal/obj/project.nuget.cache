@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "lH5HmnOp3sQ=",
+  "success": true,
+  "projectFilePath": "/home/pajar/projects/animax-mission-control-portal/src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj",
+  "expectedPackageFiles": [
+    "/home/pajar/.nuget/packages/microsoft.aspnetcore.app.internal.assets/10.0.7/microsoft.aspnetcore.app.internal.assets.10.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
