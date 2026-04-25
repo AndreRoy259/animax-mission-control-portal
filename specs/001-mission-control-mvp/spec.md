@@ -5,6 +5,15 @@
 **Status**: Draft  
 **Input**: User description: "MVP fonctionnel de Animax Mission Control Portal, application web interne fictive pour centraliser, prioriser et suivre des missions inter-divisions dans un univers corporate cyberpunk/classified."
 
+## Clarifications
+
+### Session 2026-04-25
+
+- Q: What persistence level should the MVP guarantee for created missions, updates, and blockers? -> A: Local SQLite persistence; created missions, updates, and blockers survive browser refresh and app restart.
+- Q: What seeded dataset size should the MVP include for demo coverage? -> A: Rich demo seed: 7 divisions, 12 missions, 10 updates, 8 risk/blockers, covering every status, priority, classification, and alert level.
+- Q: What UI language and terminology should the MVP use? -> A: French UI labels with canonical English domain terms preserved: Mission, Dashboard, Division, Risk, Blocker, Update, Critical.
+- Q: How should the MVP handle concurrent edits? -> A: Single-user local demo; no concurrent edit detection required. Last saved local change wins.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Creer et assigner une mission (Priority: P1)
@@ -80,6 +89,7 @@ Dashboard -> Mission List -> Create Mission -> Mission Detail -> Add Update / Ad
 
 - Creation d'une mission avec un titre vide ou compose uniquement d'espaces: la validation bloque la creation.
 - Creation ou edition d'une mission sans division: la validation bloque la sauvegarde.
+- Edition concurrente ou parallele locale: aucune detection de conflit n'est requise pour le MVP; la derniere sauvegarde locale gagne.
 - Mission Critical mais non Blocked: elle est mise en evidence comme critique sans etre comptabilisee comme bloquee.
 - Mission Blocked avec priorite Low, Medium ou High: elle apparait tout de meme dans le cockpit des missions bloquees.
 - RiskBlocker Resolved: il reste consultable dans la fiche mission mais ne compte pas dans les indicateurs ouverts.
@@ -105,7 +115,7 @@ Dashboard -> Mission List -> Create Mission -> Mission Detail -> Add Update / Ad
 - **FR-012**: Le systeme MUST permettre d'ajouter un RiskBlocker a une mission avec un type Risk ou Blocker, un statut Open ou Resolved, une description et un auteur demo.
 - **FR-013**: Le systeme MUST compter uniquement les RiskBlocker au statut Open dans les indicateurs de risques et blocages ouverts.
 - **FR-014**: Le systeme MUST fournir un referentiel leger des divisions avec leur nom, code, domaine operationnel fictif et signal visuel utilisable dans l'interface.
-- **FR-015**: Le systeme MUST inclure des donnees seedeees suffisantes pour demontrer les missions critiques, bloquees, actives, completees, les updates et les risques/blocages.
+- **FR-015**: Le systeme MUST inclure un jeu de donnees seedee riche avec 7 divisions, 12 missions, 10 updates et 8 risques/blocages couvrant tous les statuts, priorites, classifications et alert levels.
 - **FR-016**: Le systeme MUST inclure des divisions fictives seedeees telles que CCCU, FAAD, PBRL, HECH, BOACT, REMS et FMRA.
 - **FR-017**: Le systeme MUST fournir un Demo Persona Switcher avec Mission Operator, Division Lead et Executive Viewer.
 - **FR-018**: Le systeme MUST utiliser les personas pour influencer le contexte de demo, les libelles, les accents visuels ou les exemples d'auteur, sans appliquer de permissions reelles.
@@ -114,6 +124,9 @@ Dashboard -> Mission List -> Create Mission -> Mission Detail -> Add Update / Ad
 - **FR-021**: Le systeme MUST presenter une UI lisible, moderne, coherente et demo-ready dans une vision dark mode de type cyberpunk command center et classified dossier.
 - **FR-022**: Le systeme MUST respecter les exclusions MVP: pas d'authentification reelle, pas de RBAC reel, pas d'integrations externes, pas de notifications reelles, pas de workflow d'approbation avance, pas de temps reel, pas de pieces jointes, pas de multi-tenant et pas de recherche avancee.
 - **FR-023**: Le systeme MUST conserver son fonctionnement principal meme si les assets visuels non essentiels sont absents ou remplaces.
+- **FR-024**: Le systeme MUST persister localement via SQLite les missions creees, les MissionUpdate et les RiskBlocker afin qu'ils survivent a un rafraichissement du navigateur et a un redemarrage de l'application.
+- **FR-025**: Le systeme MUST utiliser des libelles UI principalement en francais tout en conservant les termes domaine canoniques en anglais: Mission, Dashboard, Division, Risk, Blocker, Update et Critical.
+- **FR-026**: Le systeme MUST etre concu comme une demo locale mono-utilisateur; aucune detection de conflit d'edition concurrente n'est requise et la derniere sauvegarde locale gagne.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -158,6 +171,7 @@ Dashboard -> Mission List -> Create Mission -> Mission Detail -> Add Update / Ad
 - Le portail doit exprimer un dark mode lisible et coherent.
 - L'ambiance attendue est cyberpunk command center + classified dossier, sans compromettre la comprehension operationnelle.
 - Les ecrans doivent etre modernes, demo-ready et adaptes a une application interne de suivi.
+- Les libelles UI doivent etre principalement en francais, avec les termes domaine canoniques en anglais: Mission, Dashboard, Division, Risk, Blocker, Update et Critical.
 - Les design tokens Animax doivent guider les couleurs, contrastes, espacements, niveaux d'alerte et signaux de classification.
 - Les composants d'interface doivent etre reutilisables et coherents entre dashboard, liste, formulaire, fiche mission et referentiel divisions.
 - La vision fournie pour les phases de realisation mentionne Tailwind CSS et des composants Razor reutilisables comme contraintes de presentation du projet.
@@ -180,8 +194,9 @@ Dashboard -> Mission List -> Create Mission -> Mission Detail -> Add Update / Ad
 ## Assumptions
 
 - Les utilisateurs du MVP sont des personas de demo, pas des comptes applicatifs.
-- Le portail est destine a une demonstration locale ou interne fictive, avec persistance suffisante pour les parcours MVP.
-- Les donnees seedeees couvrent plusieurs statuts, priorites, classifications, alert levels, divisions, updates et risques/blocages.
+- Le MVP cible une utilisation locale mono-utilisateur; les editions concurrentes multi-utilisateurs sont hors perimetre.
+- Le portail est destine a une demonstration locale ou interne fictive, avec persistance SQLite locale suffisante pour conserver les missions, updates et risques/blocages crees pendant les parcours MVP.
+- Les donnees seedeees couvrent tous les statuts, priorites, classifications et alert levels avec 7 divisions, 12 missions, 10 updates et 8 risques/blocages.
 - La classification sert a l'ambiance et au tri visuel; elle ne protege aucune donnee et ne limite aucune action.
 - Les personas peuvent modifier le contexte narratif, les accents visuels et les auteurs par defaut, mais ne limitent pas l'acces aux actions.
 - Le referentiel divisions est volontairement leger et ne vise pas une gestion administrative complete.
