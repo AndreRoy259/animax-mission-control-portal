@@ -1,0 +1,30 @@
+@inject DemoPersonaService PersonaService
+@implements IDisposable
+
+<div class="persona-switcher">
+    <label for="persona">Persona demo</label>
+    <select id="persona" value="@PersonaService.Current.Id" @onchange="OnPersonaChanged">
+        @foreach (var persona in PersonaService.Personas)
+        {
+            <option value="@persona.Id">@persona.Name</option>
+        }
+    </select>
+    <span>@PersonaService.Current.NarrativeRole</span>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        PersonaService.Changed += StateHasChanged;
+    }
+
+    private void OnPersonaChanged(ChangeEventArgs args)
+    {
+        PersonaService.Select(args.Value?.ToString());
+    }
+
+    public void Dispose()
+    {
+        PersonaService.Changed -= StateHasChanged;
+    }
+}

@@ -1,0 +1,11 @@
+<article class="timeline-item">
+    <div>
+        <strong>@Update.Author</strong>
+        <time>@Update.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</time>
+    </div>
+    <p>@Update.Content</p>
+</article>
+
+@code {
+    [Parameter, EditorRequired] public MissionUpdate Update { get; set; } = null!;
+}

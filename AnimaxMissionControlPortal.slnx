@@ -1,5 +1,4 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj" />
-  </Folder>
+  <Project Path="src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj" />
+  <Project Path="tests/AnimaxMissionControlPortal.Tests/AnimaxMissionControlPortal.Tests.csproj" />
 </Solution>

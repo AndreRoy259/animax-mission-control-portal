@@ -1,0 +1,8 @@
+<span class="division-pill @Division.VisualSignal">
+    <strong>@Division.Code</strong>
+    <span>@Division.Name</span>
+</span>
+
+@code {
+    [Parameter, EditorRequired] public Division Division { get; set; } = null!;
+}

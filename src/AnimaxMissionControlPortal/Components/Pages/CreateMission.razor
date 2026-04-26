@@ -1,0 +1,113 @@
+@page "/missions/create"
+@inject MissionService MissionService
+@inject DivisionService DivisionService
+@inject DemoPersonaService PersonaService
+@inject NavigationManager Navigation
+
+<PageTitle>Nouvelle mission</PageTitle>
+
+<section class="page-header">
+    <p class="eyebrow">Creation</p>
+    <h1>Nouvelle mission</h1>
+    <p>Les champs requis sont valides par le service de mission avec des messages lisibles en francais.</p>
+</section>
+
+<section class="panel">
+    <EditForm Model="form" OnValidSubmit="CreateAsync" FormName="create-mission" class="stack-form">
+        <label>Titre
+            <InputText @bind-Value="form.Title" />
+        </label>
+        <label>Description
+            <InputTextArea @bind-Value="form.Description" />
+        </label>
+        <div class="form-grid">
+            <label>Division
+                <InputSelect @bind-Value="form.DivisionId">
+                    <option value="0">Selectionner</option>
+                    @foreach (var division in divisions)
+                    {
+                        <option value="@division.Id">@division.Code - @division.Name</option>
+                    }
+                </InputSelect>
+            </label>
+            <label>Statut
+                <InputSelect @bind-Value="form.Status">
+                    @foreach (var value in Enum.GetValues<MissionStatus>())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </label>
+            <label>Priorite
+                <InputSelect @bind-Value="form.Priority">
+                    @foreach (var value in Enum.GetValues<Priority>())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </label>
+            <label>Classification
+                <InputSelect @bind-Value="form.Classification">
+                    @foreach (var value in Enum.GetValues<ClassificationLevel>())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </label>
+            <label>Alerte
+                <InputSelect @bind-Value="form.AlertLevel">
+                    @foreach (var value in Enum.GetValues<AlertLevel>())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </label>
+        </div>
+        <button type="submit">Creer la mission</button>
+        @if (errors.Count > 0)
+        {
+            <div class="validation">
+                @foreach (var error in errors)
+                {
+                    <p>@error</p>
+                }
+            </div>
+        }
+    </EditForm>
+</section>
+
+@code {
+    private List<Division> divisions = [];
+    private CreateMissionForm form = new();
+    private List<string> errors = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        divisions = await DivisionService.GetAllAsync();
+    }
+
+    private async Task CreateAsync()
+    {
+        var input = new MissionInput(form.Title, form.Description, form.DivisionId, form.Status, form.Priority, form.Classification, form.AlertLevel, PersonaService.CurrentAuthor);
+        var validation = await MissionService.ValidateAsync(input);
+        if (!validation.IsValid)
+        {
+            errors = validation.Errors.ToList();
+            return;
+        }
+
+        var mission = await MissionService.CreateAsync(input);
+        Navigation.NavigateTo($"/missions/{mission.Id}");
+    }
+
+    public sealed class CreateMissionForm
+    {
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+        public int DivisionId { get; set; }
+        public MissionStatus Status { get; set; } = MissionStatus.Draft;
+        public Priority Priority { get; set; } = Priority.Medium;
+        public ClassificationLevel Classification { get; set; } = ClassificationLevel.Internal;
+        public AlertLevel AlertLevel { get; set; } = AlertLevel.Normal;
+    }
+}

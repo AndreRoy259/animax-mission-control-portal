@@ -1,0 +1,14 @@
+<span class="badge badge-status @Status.ToString().ToLowerInvariant()">@Label</span>
+
+@code {
+    [Parameter] public MissionStatus Status { get; set; }
+    private string Label => Status switch
+    {
+        MissionStatus.Draft => "Draft",
+        MissionStatus.Active => "Active",
+        MissionStatus.Blocked => "Blocked",
+        MissionStatus.Completed => "Completed",
+        MissionStatus.Archived => "Archived",
+        _ => Status.ToString()
+    };
+}

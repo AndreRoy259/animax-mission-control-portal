@@ -1,0 +1,80 @@
+@inject MissionService MissionService
+@inject DemoPersonaService PersonaService
+
+<section class="panel">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Risques et bloqueurs</p>
+            <h2>Suivi operationnel</h2>
+        </div>
+    </div>
+
+    <div class="risk-list">
+        @foreach (var risk in Mission.RiskBlockers)
+        {
+            <article class="risk-item @(risk.Status == RiskBlockerStatus.Open ? "open" : "resolved")">
+                <strong>@risk.Type - @risk.Status</strong>
+                <p>@risk.Description</p>
+                <small>@risk.Author · @risk.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</small>
+            </article>
+        }
+    </div>
+
+    <EditForm Model="form" OnValidSubmit="AddRiskAsync" FormName="@($"risk-{Mission.Id}")" class="stack-form">
+        <div class="form-grid">
+            <label>Type
+                <InputSelect @bind-Value="form.Type">
+                    @foreach (var value in Enum.GetValues<RiskBlockerType>())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </label>
+            <label>Statut
+                <InputSelect @bind-Value="form.Status">
+                    @foreach (var value in Enum.GetValues<RiskBlockerStatus>())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </InputSelect>
+            </label>
+        </div>
+        <label>Description
+            <InputTextArea @bind-Value="form.Description" />
+        </label>
+        <button type="submit">Ajouter</button>
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <p class="validation">@error</p>
+        }
+    </EditForm>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public Mission Mission { get; set; } = null!;
+    [Parameter] public EventCallback Changed { get; set; }
+    private RiskForm form = new();
+    private string? error;
+
+    private async Task AddRiskAsync()
+    {
+        try
+        {
+            await MissionService.AddRiskBlockerAsync(Mission.Id, form.Type, form.Status, form.Description, PersonaService.CurrentAuthor);
+            form = new();
+            error = null;
+            await Changed.InvokeAsync();
+        }
+        catch (InvalidOperationException ex)
+        {
+            error = ex.Message;
+        }
+    }
+
+    private sealed class RiskForm
+    {
+        public RiskBlockerType Type { get; set; } = RiskBlockerType.Risk;
+        public RiskBlockerStatus Status { get; set; } = RiskBlockerStatus.Open;
+        public string? Description { get; set; }
+    }
+}

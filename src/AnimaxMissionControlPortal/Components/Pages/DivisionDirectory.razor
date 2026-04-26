@@ -1,0 +1,32 @@
+@page "/divisions"
+@inject DivisionService DivisionService
+
+<PageTitle>Divisions Animax</PageTitle>
+
+<section class="page-header">
+    <p class="eyebrow">Reference</p>
+    <h1>Divisions</h1>
+    <p>Les sept divisions fictives seed sont disponibles pour l'assignation et les filtres.</p>
+</section>
+
+<section class="division-grid">
+    @foreach (var division in divisions)
+    {
+        <article class="division-card">
+            <DivisionPill Division="division" />
+            <p>@division.OperationalDomain</p>
+            <p>@division.Description</p>
+            <strong>@division.Missions.Count mission(s)</strong>
+            <a href="missions">Filtrer dans Missions</a>
+        </article>
+    }
+</section>
+
+@code {
+    private List<Division> divisions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        divisions = await DivisionService.GetAllAsync();
+    }
+}

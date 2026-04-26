@@ -1,0 +1,66 @@
+@page "/"
+@page "/dashboard"
+@inject DashboardService DashboardService
+
+<PageTitle>Dashboard Animax</PageTitle>
+
+<section class="page-header">
+    <p class="eyebrow">Centre de commandement</p>
+    <h1>Dashboard</h1>
+    <p>Vue locale des missions fictives, priorites Critical, missions Blocked et risques ouverts.</p>
+</section>
+
+@if (snapshot is null)
+{
+    <p>Chargement du dashboard...</p>
+}
+else
+{
+    <section class="metric-grid">
+        <MetricCard Label="Missions totales" Value="snapshot.TotalMissions" />
+        <MetricCard Label="Critical" Value="snapshot.CriticalMissions" />
+        <MetricCard Label="Blocked" Value="snapshot.BlockedMissions" />
+        <MetricCard Label="Risques ouverts" Value="snapshot.OpenRiskBlockers" />
+    </section>
+
+    <section class="dashboard-grid">
+        <div class="panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Supervision</p>
+                    <h2>Missions Critical</h2>
+                </div>
+            </div>
+            <div class="card-grid">
+                @foreach (var mission in snapshot.CriticalMissionSlice)
+                {
+                    <MissionCard Mission="mission" />
+                }
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Blocages</p>
+                    <h2>Missions Blocked</h2>
+                </div>
+            </div>
+            <div class="card-grid">
+                @foreach (var mission in snapshot.BlockedMissionSlice)
+                {
+                    <MissionCard Mission="mission" />
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    private DashboardSnapshot? snapshot;
+
+    protected override async Task OnInitializedAsync()
+    {
+        snapshot = await DashboardService.GetSnapshotAsync();
+    }
+}

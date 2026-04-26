@@ -1,102 +1,68 @@
 # Animax Mission Control Portal
 
-Animax Mission Control Portal is a fictive, demo-safe internal web app for
-Animax Global Corporation(TM). The MVP demonstrates a Spec-Driven + Codex
-workflow through a credible Blazor application for centralizing, prioritizing,
-and tracking inter-division missions.
+Local-first Blazor MVP for a fictive Animax mission command portal. The app uses synthetic data only, stores local demo state in SQLite, and does not implement real authentication, RBAC, external APIs, notifications, SignalR, attachments, tenant isolation, or production security controls.
 
-## Target Stack
+## Stack
 
-- C# / .NET / Blazor
+- C# / .NET 10 / Blazor
 - EF Core with SQLite
-- Tailwind CSS
-- Reusable Razor components
-- Local-first execution with synthetic seed data
+- Razor components
+- Tailwind-oriented CSS entrypoint and Animax design tokens
+- xUnit, FluentAssertions, and SQLite-backed service tests
 
 ## Commands
 
 ```bash
 dotnet restore
 dotnet build src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj
+dotnet build tests/AnimaxMissionControlPortal.Tests/AnimaxMissionControlPortal.Tests.csproj
+dotnet test tests/AnimaxMissionControlPortal.Tests/AnimaxMissionControlPortal.Tests.csproj
 dotnet run --project src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj
-dotnet test
 ```
 
-`dotnet test` requires a test project to be present. Until then, use `dotnet
-build` as the executable validation gate.
+The app creates `src/AnimaxMissionControlPortal/Data/animax-mission-control.db` automatically and seeds fictive demo records idempotently.
 
-If EF Core migrations are used for SQLite setup, validate the CLI first:
+Environment caveat recorded during implementation: `dotnet build AnimaxMissionControlPortal.slnx` exited with code 1 and no diagnostics in this workspace, while both project-level builds and `dotnet sln AnimaxMissionControlPortal.slnx list` succeeded.
 
-```bash
-dotnet ef --version
-dotnet ef database update --project src/AnimaxMissionControlPortal
-```
+## Tailwind And CSS
 
-If `dotnet ef` is unavailable in WSL:
+The planned Tailwind entrypoint is `src/AnimaxMissionControlPortal/Styles/tailwind.css`, with tokens in `src/AnimaxMissionControlPortal/Styles/tokens.css` and compiled output served from `src/AnimaxMissionControlPortal/wwwroot/css/app.css`.
 
-```bash
-dotnet tool install --global dotnet-ef
-export PATH="$PATH:$HOME/.dotnet/tools"
-```
-
-Tailwind CSS should use the simple CLI path:
+Indicative compile command:
 
 ```bash
 npx @tailwindcss/cli -i ./src/AnimaxMissionControlPortal/Styles/tailwind.css -o ./src/AnimaxMissionControlPortal/wwwroot/css/app.css
-npx @tailwindcss/cli -i ./src/AnimaxMissionControlPortal/Styles/tailwind.css -o ./src/AnimaxMissionControlPortal/wwwroot/css/app.css --watch
 ```
 
-## MVP Scope
+The current MVP includes committed CSS output so the demo runs without requiring Node tooling.
 
-The planned MVP includes:
+## Demo Data
 
-- Dashboard
-- Mission List
-- Create Mission
-- Mission Detail
-- Division Directory
-- Lightweight Demo Persona Switcher
-- Synthetic seed data for missions, divisions, and personas
+Seed data includes 7 divisions, 12 missions, 10 updates, and 8 risks/blockers. Required division codes are `CCCU`, `FAAD`, `PBRL`, `HECH`, `BOACT`, `REMS`, and `FMRA`.
 
-The MVP does not include real authentication, RBAC, approval workflows, external
-APIs, real notifications, multi-tenant behavior, real-time synchronization,
-attachments, or production-ready enterprise workflow behavior.
+Classification labels are informative demo labels only. They are not security controls.
 
-## Solution Structure
+## Routes
 
-```text
-src/
-└── AnimaxMissionControlPortal/
-    ├── Domain/
-    ├── Data/
-    ├── Services/
-    ├── Components/
-    ├── Components/Pages/
-    ├── Styles/
-    ├── Assets/
-    └── wwwroot/
+- `/` and `/dashboard`: Dashboard counts, Critical missions, Blocked missions, and open risks/blockers
+- `/missions`: Mission List with status, priority, division, classification, and alert filters
+- `/missions/create`: Create Mission form with French validation messages
+- `/missions/{id:int}`: Mission Detail with status/priority edits, timeline updates, and risk/blocker panel
+- `/divisions`: Division Directory with all seven seeded divisions and mission counts
 
-tests/
-└── AnimaxMissionControlPortal.Tests/
-```
+## Demo Journey
 
-## Technical Assumptions
+Manual journey to validate after launch:
 
-- The app runs completely locally.
-- SQLite is the default persistence store.
-- EF Core migrations may create the local SQLite database, but `dotnet ef` is not required if the implementation creates the database automatically at startup.
-- Tailwind compiles from `Styles/tailwind.css` into a Blazor-served CSS file such as `wwwroot/css/app.css`.
-- Animax design tokens stay in a lightweight CSS file such as `Styles/tokens.css`.
-- All data is synthetic and safe for demos.
-- Demo persona switching is simulated and visual only.
-- Classification labels are presentation metadata, not security controls.
-- Visual Animax assets can be generated later and are not required for core behavior.
+1. Open Dashboard and confirm totals, Critical missions, Blocked missions, and open risks/blockers are visible.
+2. Switch persona between Mission Operator, Division Lead, and Executive Viewer.
+3. Open Mission List and apply filters for status, priority, division, classification, and alert level.
+4. Create a Mission with title, division, status, priority, classification, and alert level.
+5. Open Mission Detail, add an Update, and add an Open Risk or Blocker.
+6. Return to Dashboard and confirm counts refresh.
 
-## Key Decisions
+Implementation smoke validation confirmed all five MVP routes returned HTTP 200 locally. Service tests cover the create/update/add-update/add-risk behavior that backs the interactive journey. Expected local demo duration is under 5 minutes on a standard developer machine.
 
-- Keep the MVP simple and readable in VS Code + WSL.
-- Prefer Blazor and Razor components over a heavy UI framework.
-- Use EF Core directly for MVP data access unless a concrete duplication problem appears.
-- Use Tailwind CLI without introducing a heavy UI framework; remove or neutralize Bootstrap template artifacts only if they conflict with the Tailwind shell.
-- Add targeted tests around domain behavior, seed data, services, and critical UI workflows.
-- Update this README when build, run, test, structure, or demo-safe assumptions change.
+## Visual Assets
+
+Visual assets are non-critical for this MVP. Future assets belong under `src/AnimaxMissionControlPortal/Assets/` and must stay fictive, local, and demo-safe.

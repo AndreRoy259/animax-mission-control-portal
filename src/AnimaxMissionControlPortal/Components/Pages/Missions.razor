@@ -1,0 +1,117 @@
+@page "/missions"
+@inject MissionService MissionService
+@inject DivisionService DivisionService
+
+<PageTitle>Missions Animax</PageTitle>
+
+<section class="page-header">
+    <p class="eyebrow">Portefeuille</p>
+    <h1>Missions</h1>
+    <p>Filtrer par statut, priorite, division, classification ou niveau d'alerte.</p>
+</section>
+
+<section class="panel">
+    <div class="filters">
+        <label>Statut
+            <select @bind="selectedStatus">
+                <option value="">Tous</option>
+                @foreach (var value in Enum.GetValues<MissionStatus>())
+                {
+                    <option value="@value">@value</option>
+                }
+            </select>
+        </label>
+        <label>Priorite
+            <select @bind="selectedPriority">
+                <option value="">Toutes</option>
+                @foreach (var value in Enum.GetValues<Priority>())
+                {
+                    <option value="@value">@value</option>
+                }
+            </select>
+        </label>
+        <label>Division
+            <select @bind="selectedDivisionId">
+                <option value="">Toutes</option>
+                @foreach (var division in divisions)
+                {
+                    <option value="@division.Id">@division.Code</option>
+                }
+            </select>
+        </label>
+        <label>Classification
+            <select @bind="selectedClassification">
+                <option value="">Toutes</option>
+                @foreach (var value in Enum.GetValues<ClassificationLevel>())
+                {
+                    <option value="@value">@value</option>
+                }
+            </select>
+        </label>
+        <label>Alerte
+            <select @bind="selectedAlert">
+                <option value="">Toutes</option>
+                @foreach (var value in Enum.GetValues<AlertLevel>())
+                {
+                    <option value="@value">@value</option>
+                }
+            </select>
+        </label>
+        <button type="button" @onclick="ApplyFiltersAsync">Filtrer</button>
+        <button type="button" class="secondary" @onclick="ClearFiltersAsync">Effacer</button>
+    </div>
+</section>
+
+@if (missions.Count == 0)
+{
+    <section class="empty-state">
+        <h2>Aucun resultat</h2>
+        <p>Aucune mission ne correspond aux filtres actifs.</p>
+    </section>
+}
+else
+{
+    <section class="card-grid mission-list">
+        @foreach (var mission in missions)
+        {
+            <MissionCard Mission="mission" />
+        }
+    </section>
+}
+
+@code {
+    private List<Mission> missions = [];
+    private List<Division> divisions = [];
+    private string? selectedStatus;
+    private string? selectedPriority;
+    private string? selectedDivisionId;
+    private string? selectedClassification;
+    private string? selectedAlert;
+
+    protected override async Task OnInitializedAsync()
+    {
+        divisions = await DivisionService.GetAllAsync();
+        await LoadAsync();
+    }
+
+    private Task ApplyFiltersAsync() => LoadAsync();
+
+    private async Task ClearFiltersAsync()
+    {
+        selectedStatus = selectedPriority = selectedDivisionId = selectedClassification = selectedAlert = null;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        missions = await MissionService.GetMissionsAsync(new MissionFilter(
+            Parse<MissionStatus>(selectedStatus),
+            Parse<Priority>(selectedPriority),
+            int.TryParse(selectedDivisionId, out var divisionId) ? divisionId : null,
+            Parse<ClassificationLevel>(selectedClassification),
+            Parse<AlertLevel>(selectedAlert)));
+    }
+
+    private static TEnum? Parse<TEnum>(string? value) where TEnum : struct, Enum =>
+        Enum.TryParse<TEnum>(value, out var parsed) ? parsed : null;
+}

@@ -1,0 +1,137 @@
+@page "/missions/{Id:int}"
+@inject MissionService MissionService
+@inject DemoPersonaService PersonaService
+
+<PageTitle>Detail mission</PageTitle>
+
+@if (mission is null)
+{
+    <section class="empty-state">
+        <h1>Mission introuvable</h1>
+        <a href="missions">Retour aux missions</a>
+    </section>
+}
+else
+{
+    <section class="page-header">
+        <p class="eyebrow">@mission.Division.Code</p>
+        <h1>@mission.Title</h1>
+        <p>@mission.Description</p>
+        <div class="badge-row">
+            <StatusBadge Status="mission.Status" />
+            <PriorityBadge Priority="mission.Priority" />
+            <ClassificationBadge Classification="mission.Classification" />
+            <AlertBadge AlertLevel="mission.AlertLevel" />
+        </div>
+        <p class="fine-print">Les classifications sont des etiquettes de demonstration, pas des controles de securite.</p>
+    </section>
+
+    <section class="dashboard-grid">
+        <div class="panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Pilotage</p>
+                    <h2>Statut et priorite</h2>
+                </div>
+            </div>
+            <EditForm Model="editForm" OnValidSubmit="SaveStatusAsync" FormName="@($"status-{mission.Id}")" class="stack-form">
+                <div class="form-grid">
+                    <label>Statut
+                        <InputSelect @bind-Value="editForm.Status">
+                            @foreach (var value in Enum.GetValues<MissionStatus>())
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </InputSelect>
+                    </label>
+                    <label>Priorite
+                        <InputSelect @bind-Value="editForm.Priority">
+                            @foreach (var value in Enum.GetValues<Priority>())
+                            {
+                                <option value="@value">@value</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </div>
+                <button type="submit">Enregistrer</button>
+            </EditForm>
+
+            <div class="timeline">
+                <h2>Timeline</h2>
+                @foreach (var update in mission.Updates)
+                {
+                    <TimelineItem Update="update" />
+                }
+            </div>
+
+            <EditForm Model="updateForm" OnValidSubmit="AddUpdateAsync" FormName="@($"update-{mission.Id}")" class="stack-form">
+                <label>Nouvelle mise a jour
+                    <InputTextArea @bind-Value="updateForm.Content" />
+                </label>
+                <button type="submit">Ajouter une update</button>
+                @if (!string.IsNullOrWhiteSpace(updateError))
+                {
+                    <p class="validation">@updateError</p>
+                }
+            </EditForm>
+        </div>
+
+        <RiskBlockerPanel Mission="mission" Changed="LoadAsync" />
+    </section>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Mission? mission;
+    private EditStatusForm editForm = new();
+    private UpdateForm updateForm = new();
+    private string? updateError;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        mission = await MissionService.GetByIdAsync(Id);
+        if (mission is not null)
+        {
+            editForm = new EditStatusForm { Status = mission.Status, Priority = mission.Priority };
+        }
+    }
+
+    private async Task SaveStatusAsync()
+    {
+        if (mission is null) return;
+        await MissionService.UpdateStatusPriorityAsync(mission.Id, editForm.Status, editForm.Priority);
+        await LoadAsync();
+    }
+
+    private async Task AddUpdateAsync()
+    {
+        if (mission is null) return;
+        try
+        {
+            await MissionService.AddUpdateAsync(mission.Id, updateForm.Content, PersonaService.CurrentAuthor);
+            updateForm = new();
+            updateError = null;
+            await LoadAsync();
+        }
+        catch (InvalidOperationException ex)
+        {
+            updateError = ex.Message;
+        }
+    }
+
+    private sealed class EditStatusForm
+    {
+        public MissionStatus Status { get; set; }
+        public Priority Priority { get; set; }
+    }
+
+    private sealed class UpdateForm
+    {
+        public string? Content { get; set; }
+    }
+}

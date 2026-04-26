@@ -1,0 +1,19 @@
+<a class="mission-card @(Mission.IsCritical ? "is-critical" : "") @(Mission.IsBlocked ? "is-blocked" : "")" href="missions/@Mission.Id">
+    <div class="mission-card-head">
+        <div>
+            <p class="eyebrow">@Mission.Division.Code</p>
+            <h3>@Mission.Title</h3>
+        </div>
+        <AlertBadge AlertLevel="Mission.AlertLevel" />
+    </div>
+    <p>@Mission.Description</p>
+    <div class="badge-row">
+        <StatusBadge Status="Mission.Status" />
+        <PriorityBadge Priority="Mission.Priority" />
+        <ClassificationBadge Classification="Mission.Classification" />
+    </div>
+</a>
+
+@code {
+    [Parameter, EditorRequired] public Mission Mission { get; set; } = null!;
+}
