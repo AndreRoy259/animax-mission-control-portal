@@ -2,6 +2,7 @@
 
 **Input**: Design documents from `/home/pajar/projects/animax-mission-control-portal/specs/001-mission-control-mvp/`
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/ui-contract.md, quickstart.md
+**Artifact Note**: This `tasks.md` is the generated post-plan task artifact for `001-mission-control-mvp`; `plan.md` remains the earlier planning artifact.
 **Tests**: Targeted tests are included because the implementation plan requires service, domain, seed data, validation, and dashboard-count coverage.
 **Organization**: Tasks are grouped by user story so each story can be implemented and tested independently after the shared foundation.
 
@@ -41,7 +42,7 @@
 - [ ] T015 [P] Create EF Core entity configurations in `src/AnimaxMissionControlPortal/Data/Configurations/DivisionConfiguration.cs`, `src/AnimaxMissionControlPortal/Data/Configurations/MissionConfiguration.cs`, `src/AnimaxMissionControlPortal/Data/Configurations/MissionUpdateConfiguration.cs`, and `src/AnimaxMissionControlPortal/Data/Configurations/RiskBlockerConfiguration.cs`
 - [ ] T016 Create deterministic synthetic seed definitions in `src/AnimaxMissionControlPortal/Data/Seed/AnimaxSeedData.cs`
 - [ ] T017 Create idempotent seed service in `src/AnimaxMissionControlPortal/Services/SeedService.cs`
-- [ ] T018 [P] Create demo persona service in `src/AnimaxMissionControlPortal/Services/DemoPersonaService.cs`
+- [ ] T018 [P] Create demo persona service as in-memory/scoped UI demo state by default, with no DemoPersona persistence table unless explicitly justified later, in `src/AnimaxMissionControlPortal/Services/DemoPersonaService.cs`
 - [ ] T019 Create division service in `src/AnimaxMissionControlPortal/Services/DivisionService.cs`
 - [ ] T020 Create mission validation result types in `src/AnimaxMissionControlPortal/Services/MissionValidationResult.cs`
 - [ ] T021 Create mission service with create, read, update status/priority, add update, add risk/blocker, and filter operations in `src/AnimaxMissionControlPortal/Services/MissionService.cs`
@@ -92,7 +93,7 @@
 ### Tests for User Story 2
 
 - [ ] T039 [P] [US2] Add status and priority update tests in `tests/AnimaxMissionControlPortal.Tests/Services/MissionServiceUpdateTests.cs`
-- [ ] T040 [P] [US2] Add mission update and risk/blocker service tests in `tests/AnimaxMissionControlPortal.Tests/Services/MissionActivityTests.cs`
+- [ ] T040 [P] [US2] Add mission update and risk/blocker service tests, including SQLite reload coverage proving created `MissionUpdate` and `RiskBlocker` records are read correctly after a fresh DbContext/service instance, in `tests/AnimaxMissionControlPortal.Tests/Services/MissionActivityTests.cs`
 - [ ] T041 [P] [US2] Add open versus resolved risk/blocker dashboard tests in `tests/AnimaxMissionControlPortal.Tests/Services/RiskBlockerDashboardTests.cs`
 
 ### Implementation for User Story 2
@@ -161,6 +162,8 @@
 - [ ] T062 Verify French UI labels and canonical English terms across `src/AnimaxMissionControlPortal/Components/Pages/` and `src/AnimaxMissionControlPortal/Components/Shared/`
 - [ ] T063 Verify no real auth, RBAC, external API, notification, SignalR, attachment, multi-tenant, secret, or production-security claim was introduced in `src/AnimaxMissionControlPortal/`
 - [ ] T064 Run quickstart validation commands and record any environment-specific caveats in `README.md`
+- [ ] T065 Manually validate the full demo journey Dashboard -> Mission List -> Create Mission -> Mission Detail -> Add Update / Add Blocker -> Dashboard Refresh, confirm it completes in under 5 minutes with seeded data, and document the result or caveats in `README.md`
+- [ ] T066 Complete a lightweight manual UI/demo-ready checklist covering the 5 MVP routes visible and navigable, Critical and Blocked states visually distinct, main Dashboard counters visible, primary labels in French with canonical English domain terms preserved, usable layout at standard desktop width, no blocking visual assets, and no real security claims tied to classifications; record findings or caveats in `README.md`
 
 ---
 
@@ -199,6 +202,7 @@
 - Story test tasks within each user story can run in parallel.
 - After Phase 2, US1, US2, US3, and US4 can be staffed in parallel if page file edits are coordinated.
 - Polish tasks T059, T060, and T061 can run in parallel.
+- Manual validation tasks T065 and T066 run after the routes, styling, data, and README baseline are complete.
 
 ## Parallel Examples
 
