@@ -17,7 +17,7 @@
 
 - [ ] T001 Update `src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj` with EF Core SQLite/design/tooling package references and Tailwind-friendly static asset settings
 - [ ] T002 Create `tests/AnimaxMissionControlPortal.Tests/AnimaxMissionControlPortal.Tests.csproj` with xUnit, FluentAssertions, EF Core SQLite, and project reference to `src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj`
-- [ ] T003 Create repository solution file `AnimaxMissionControlPortal.sln` including `src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj` and `tests/AnimaxMissionControlPortal.Tests/AnimaxMissionControlPortal.Tests.csproj`
+- [ ] T003 Validate/update existing `AnimaxMissionControlPortal.slnx` to include `src/AnimaxMissionControlPortal/AnimaxMissionControlPortal.csproj` and `tests/AnimaxMissionControlPortal.Tests/AnimaxMissionControlPortal.Tests.csproj`
 - [ ] T004 [P] Create folder placeholders or README files for `src/AnimaxMissionControlPortal/Domain/`, `src/AnimaxMissionControlPortal/Data/`, `src/AnimaxMissionControlPortal/Services/`, `src/AnimaxMissionControlPortal/Components/Shared/`, `src/AnimaxMissionControlPortal/Styles/`, and `src/AnimaxMissionControlPortal/Assets/README.md`
 - [ ] T005 [P] Create Tailwind entrypoint and Animax token files in `src/AnimaxMissionControlPortal/Styles/tailwind.css` and `src/AnimaxMissionControlPortal/Styles/tokens.css`
 - [ ] T006 [P] Create Tailwind output directory and compiled CSS placeholder in `src/AnimaxMissionControlPortal/wwwroot/css/app.css`
